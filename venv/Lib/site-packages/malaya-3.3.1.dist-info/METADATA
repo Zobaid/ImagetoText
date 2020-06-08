@@ -1,0 +1,36 @@
+Metadata-Version: 2.1
+Name: malaya
+Version: 3.3.1
+Summary: Natural-Language-Toolkit for bahasa Malaysia, powered by Deep Learning Tensorflow.
+Home-page: https://github.com/huseinzol05/Malaya
+Author: huseinzol05
+Author-email: husein.zol05@gmail.com
+License: MIT
+Download-URL: https://github.com/huseinzol05/Malaya/archive/master.zip
+Keywords: nlp,bm
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Text Processing
+Requires-Python: >=3.6.*
+Requires-Dist: dateparser
+Requires-Dist: sklearn
+Requires-Dist: scikit-learn
+Requires-Dist: requests
+Requires-Dist: unidecode
+Requires-Dist: tensorflow (>=1.15.2)
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: PySastrawi
+Requires-Dist: ftfy
+Requires-Dist: networkx
+Requires-Dist: sentencepiece
+Requires-Dist: bert-tensorflow
+Requires-Dist: tqdm
+Requires-Dist: herpetologist
+
+UNKNOWN
+
+

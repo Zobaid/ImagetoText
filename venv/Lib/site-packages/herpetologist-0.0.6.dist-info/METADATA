@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: herpetologist
+Version: 0.0.6
+Summary: Dynamic parameter type checking for Python 3.6 and above. This able to detect deep nested variables.
+Home-page: https://github.com/huseinzol05/herpetologist
+Author: huseinzol05
+Author-email: husein.zol05@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6.*
+
+UNKNOWN
+
+

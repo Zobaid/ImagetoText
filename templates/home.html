@@ -1,0 +1,17 @@
+<html>
+<head>
+<!-- Css files -->  
+<link rel="stylesheet" href='{{url_for("static", filename="css/home.css" )}}'> </link>
+ </head>
+<body>
+    <h3>Please select image file to process</h3>
+    <br/>
+    <form enctype="multipart/form-data" Method="POST" action="/process_image">
+        <div> <label>Image :</label> <!--<input name="txt-filename" type="text"></input>--> <input type="file" name="img"></input>
+        <br/>
+        <input type="submit" name="btn-submit" value="Process"> </input>
+        </div>
+    <form>
+</body>
+
+</html>
