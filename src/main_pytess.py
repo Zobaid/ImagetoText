@@ -202,6 +202,7 @@ def process_image():
     return Img_Proc.process_image()
 
 @app.route('/htrengine',methods= ['POST'])
+
 def htrengine():
     the_filename = ""
     for dirpath, dirnames, files in os.walk('../input_words/', topdown=False):
