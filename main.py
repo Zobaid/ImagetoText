@@ -12,10 +12,36 @@ import cv2
 import os
 import src.word_seg
 import src.dictionary_test
-import src.tess
+#import src.Tess
 import flask
 import sys
 from src.Image_Processing import Image_Processing
+
+#Tess references
+from spellchecker import SpellChecker
+import malaya
+from symspellpy import SymSpell, Verbosity
+import pytesseract
+import cv2
+import pkg_resources
+import main
+spell = SpellChecker()
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
+dictionary_path = pkg_resources.resource_filename(
+    "symspellpy", "frequency_dictionary_en_82_765.txt")
+bigram_path = pkg_resources.resource_filename(
+    "symspellpy", "frequency_bigramdictionary_en_243_342.txt")
+# term_index is the column of the term and count_index is the
+# column of the term frequency
+sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
+# prob_corrector = malaya.spell.symspell()
+prob_corrector = malaya.spell.probability()
+
+
+
 
 
 
@@ -24,10 +50,10 @@ app.config['DEBUG'] == True
 
 class FilePaths:
     "filenames and paths to data"
-    fnCharList = '../model/charList.txt'
-    fnAccuracy = '../model/accuracy.txt'
-    fnTrain = '../data/'
-    fnCorpus = '../data/corpus.txt'
+    fnCharList = 'model/charList.txt'
+    fnAccuracy = 'model/accuracy.txt'
+    fnTrain = 'data/'
+    fnCorpus = 'data/corpus.txt'
 
 
 def getint(name):
@@ -180,80 +206,113 @@ def run(filename):
         return index_list, result_list, prob_list
 
 
+
+
+#tess function 
+def tessract_test(img_path, filename):
+    img_cv = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
+    # dic = pytesseract.image_to_data(img_rgb, lang='eng', output_type='data.frame')
+    dic = pytesseract.image_to_data(img_rgb, lang='eng', output_type='dict')
+    print("Recognition with pyTesseract only")
+    print(pytesseract.image_to_string(img_rgb, lang='eng'))
+    left_list = dic['left']
+    top_list = dic['top']
+    width_list = dic['width']
+    height_list = dic['height']
+    confident_list = dic['conf']
+    text_list = dic['text']
+    word_num_list = dic['word_num']
+
+    filename_output = filename
+    for i in range(len(confident_list)):
+        if 90 > int(confident_list[i]) >= 0:
+            # print(word_num_list[i], left_list[i], top_list[i], width_list[i], height_list[i], confident_list[i], text_list[i])
+            x = int(top_list[i])
+            y = int(left_list[i])
+            w = int(width_list[i])
+            h = int(height_list[i])
+            # cv2.rectangle(img_cv, (y, x), (y + w, x + h), (0, 0, 0), 3)
+            image_to_show = img_cv[x:x + h, y:y + w]
+            # cv2.namedWindow('CROP IMAGE', cv2.WINDOW_NORMAL)
+            # cv2.imshow("CROP IMAGE", image_to_show)
+            cv2.imwrite('../output_words/' + filename_output + '/%d.png' % i, image_to_show)  # save word
+            # cv2.waitKey()
+    return word_num_list, text_list, confident_list
+
+
+#htrengine function
+def htrengine():
+    try:
+        #file = request.files['img']
+        #return file.filename
+        the_filename = ""
+        for dirpath, dirnames, files in os.walk('input_words/', topdown=False):
+            for sub_file in sorted(files):
+                img_path = dirpath + sub_file
+                the_filename, _ = sub_file.split('.')
+                try:
+                   os.mkdir('output_words/' + the_filename)
+                except FileExistsError:
+                    print("Cannot read image because file exist already")
+                    #os.mkdir('../output_words/' + the_filename+1)
+                    continue
+                
+                word_num, word_text, conf_word = tessract_test(img_path, the_filename)  # this will produce output and word segmentation
+                index, result, prob = run(the_filename)  # NN engine can only run once, need to refactor to place it out of this loop
+                # Comparison of score between pytesseract model & NN mdel
+                for i in range(len(index)):
+                    if int(conf_word[int(index[i])]) > 0:
+                        score = int(conf_word[int(index[i])])/100
+                    else:
+                        score = int(conf_word[int(index[i])])
+                        #print(float(prob[i]),float(score))
+                    # if probabilty or model higher than pytesseract use, model!
+                    if float(prob[i]) > float(score):
+                        print("REPLACE prob comparison",  word_text[int(index[i])],">", result[i])
+                        word_text[int(index[i])] = result[i]
+                    else:
+                        # Feed the pytesseract word into dictionary(symspell)
+                        pyword = word_text[int(index[i])]
+                        word_correct = src.dictionary_test.spellcheck(pyword)  # can adjust to different dictionery
+                        print("REPLACE with dictionary",  word_text[int(index[i])],">", word_correct)
+                        word_text[int(index[i])] = word_correct        
+                # Tabulation of text
+                the_text = ""
+                newline = '\n'
+                for i in range(len(word_num)):
+                    if word_num[i] == 0:
+                        the_text += newline
+                    else:
+                        the_text += str(word_text[i]) + " "
+                #print("Correction with handwriting model & dictionary")
+                print(the_text)
+                print("Working!")
+                return the_text
+    except:
+        print(sys.exc_info()[0])
+        return "wRONG INPUT"
+        
+
+
 #---Define routes---
 #Home route
-#@app.route('/', methods=['GET'])
-#def home():
-   # return render_template('home.html')
+@app.route('/', methods=['GET'])
+def home():
+    #return htrengine()
+    return render_template('home.html')
+
+#process image route
+@app.route('/process_image', methods=['POST'])
+def process_image():
+    return htrengine()
 
 
-#Process image route
-
-#app.route('/htrengine',methods=['POST'])
-def htrengine():
-    the_filename = ""
-    for dirpath, dirnames, files in os.walk('../input_words/', topdown=False):
-        for sub_file in sorted(files):
-            img_path = dirpath + sub_file
-            the_filename, _ = sub_file.split('.')
-            try:
-                os.mkdir('../output_words/' + the_filename)
-            except FileExistsError:
-                print("Cannot read image because file exist already")
-                #os.mkdir('../output_words/' + the_filename+1)
-                continue
-            word_num, word_text, conf_word = tess.tessract_test(img_path, the_filename)  # this will produce output and word segmentation
-            index, result, prob = run(the_filename)  # NN engine can only run once, need to refactor to place it out of this loop
-
-            # Comparison of score between pytesseract model & NN mdel
-            for i in range(len(index)):
-                if int(conf_word[int(index[i])]) > 0:
-                    score = int(conf_word[int(index[i])])/100
-                else:
-                    score = int(conf_word[int(index[i])])
-                # print(float(prob[i]),float(score))
-                # if probabilty or model higher than pytesseract use, model!
-                if float(prob[i]) > float(score):
-                    print("REPLACE prob comparison",  word_text[int(index[i])],">", result[i])
-                    word_text[int(index[i])] = result[i]
-                else:
-                    # Feed the pytesseract word into dictionary(symspell)
-                    pyword = word_text[int(index[i])]
-                    word_correct = dictionary_test.spellcheck(pyword)  # can adjust to different dictionery
-                    print("REPLACE with dictionary",  word_text[int(index[i])],">", word_correct)
-                    word_text[int(index[i])] = word_correct
-
-            # Tabulation of text
-            the_text = ""
-            newline = '\n'
-            for i in range(len(word_num)):
-                if word_num[i] == 0:
-                    the_text += newline
-                else:
-                    the_text += str(word_text[i]) + " "
-            print("Correction with handwriting model & dictionary")
-            print(the_text)
-            print("Working!")
-            
-            
-            #try:
-                   
-                  # file = open('../output_words/Text/A.txt', 'w')
-                  # file.write(the_text)
-                   #file.close()
-                  
-            #except FileExistsError:
-                  #  print("Cannot read image because file exist already")
-           
-            
-            #return the_text
-            
-
-#serve(app, host='0.0.0.0', port=700) 
+serve(app, host='0.0.0.0', port=700) 
 
     
 if __name__ == '__main__':
-    htrengine()
+    #htrengine()
     print("App is running!")
 
             

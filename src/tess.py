@@ -51,6 +51,3 @@ def tessract_test(img_path, filename):
             cv2.imwrite('../output_words/' + filename_output + '/%d.png' % i, image_to_show)  # save word
             # cv2.waitKey()
     return word_num_list, text_list, confident_list
-
-
-
