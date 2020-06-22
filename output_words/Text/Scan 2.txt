@@ -1,0 +1,48 @@
+
+
+
+
+  
+
+
+computervision For CUSTLE: 
+I Ir as eee in 
+
+
+Background 
+
+him 
+
+Process 
+
+Technology | nethods 
+current progress 
+
+
+custer provides the Service or tailormade shirt 
+
+er o customer based on the Mage off then 
+
+holding an 44 paper From this magee custer 
+
+will decide the measurements of the army shoulder 
+waist chest & bicep Be Which are needed 
+
+to make a tailer-made shist -Paeepeneer 
+
+However trackrny & measurmy the mages one-by-one 
+can be time Consumily Ar some pointIt i TS prone 
+to human enor: for excample , wrongly marked or 
+missny marksan the picture 
+
+ThowFore, technology such as machine rearury 
+
+will be able to help from such error B challenges . 
+complter vsron 15 a task Mm macho lea 
+
+that handler Prvems related to object recognition 
+lear Segmentation etc- 
+
+What CV can do for custer data is to 
+automaticaly landmark the measurement ponts 
+mentioned provious\y - 

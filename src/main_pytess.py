@@ -7,9 +7,9 @@ from Model import Model, DecoderType
 from SamplePreprocessor import preprocess
 import cv2
 import os
-import word_seg
+#import word_seg
 import dictionary_test
-import tess
+import Tess
 import flask
 import sys
 from flask import Flask, request, jsonify, render_template
@@ -161,7 +161,7 @@ def run(filename):
         index_list = []
         result_list = []
         prob_list = []
-        print(open(FilePaths.fnAccuracy).read())
+        print(" Line 164 from main pytess "+open(FilePaths.fnAccuracy).read())
         model = Model(open(FilePaths.fnCharList).read(), decoderType, mustRestore=True, dump=args.dump)
 
         for dirpath, dirnames, files in os.walk('../output_words/' + filename, topdown=False):
@@ -215,16 +215,18 @@ def htrengine():
                 print("Cannot read image because file exist already")
                 #os.mkdir('../output_words/' + the_filename+1)
                 continue
-            word_num, word_text, conf_word = tess.tessract_test(img_path, the_filename)  # this will produce output and word segmentation
+            word_num, word_text, conf_word = Tess.tessract_test(img_path, the_filename)  # this will produce output and word segmentation
             index, result, prob = run(the_filename)  # NN engine can only run once, need to refactor to place it out of this loop
 
             # Comparison of score between pytesseract model & NN mdel
             for i in range(len(index)):
                 if int(conf_word[int(index[i])]) > 0:
                     score = int(conf_word[int(index[i])])/100
+                    #print("line 225   "+ score)
                 else:
                     score = int(conf_word[int(index[i])])
-                # print(float(prob[i]),float(score))
+                    #print("line 228   "+ score)
+                #print(" line 229"+ float(prob[i]),float(score))
                 # if probabilty or model higher than pytesseract use, model!
                 if float(prob[i]) > float(score):
                     print("REPLACE prob comparison",  word_text[int(index[i])],">", result[i])
@@ -244,29 +246,30 @@ def htrengine():
                     the_text += newline
                 else:
                     the_text += str(word_text[i]) + " "
-            #print("Correction with handwriting model & dictionary")
-            #print(the_text)
+            print("Correction with handwriting model & dictionary")
+            print(the_text)
             print("Working!")
             
             
-            #try:
+            try:
                    
-                  # file = open('../output_words/Text/A.txt', 'w')
-                  # file.write(the_text)
-                   #file.close()
+                  file = open('../output_words/Text/'+the_filename+".txt", 'w+')
+                  file.write(the_text)
+                  file.close()
                   
-            #except FileExistsError:
-                  #  print("Cannot read image because file exist already")
+            except FileExistsError:
+                   print("Cannot read image because file exist already")
            
             
             #return the_text
             
 
-serve(app, host='0.0.0.0', port=700) 
+#serve(app, host='0.0.0.0', port=700) 
 
     
 if __name__ == '__main__':
     
+    htrengine()
     print("App is running!")
 
             

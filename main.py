@@ -269,13 +269,13 @@ def htrengine():
                         #print(float(prob[i]),float(score))
                     # if probabilty or model higher than pytesseract use, model!
                     if float(prob[i]) > float(score):
-                        print("REPLACE prob comparison",  word_text[int(index[i])],">", result[i])
+                        print("REPLACE prob comparison....................",  word_text[int(index[i])],">", result[i])
                         word_text[int(index[i])] = result[i]
                     else:
                         # Feed the pytesseract word into dictionary(symspell)
                         pyword = word_text[int(index[i])]
                         word_correct = src.dictionary_test.spellcheck(pyword)  # can adjust to different dictionery
-                        print("REPLACE with dictionary",  word_text[int(index[i])],">", word_correct)
+                        print("REPLACE with dictionary.........................",  word_text[int(index[i])],">", word_correct)
                         word_text[int(index[i])] = word_correct        
                 # Tabulation of text
                 the_text = ""
@@ -285,7 +285,7 @@ def htrengine():
                         the_text += newline
                     else:
                         the_text += str(word_text[i]) + " "
-                #print("Correction with handwriting model & dictionary")
+                print("Correction with handwriting model & dictionary..............................................")
                 print(the_text)
                 print("Working!")
                 return the_text

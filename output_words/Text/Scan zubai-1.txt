@@ -1,0 +1,52 @@
+
+
+
+
+  
+
+
+  
+
+
+T wore to understand that we have two main goals to achieve . 
+
+
+we have a dataset of roilrs holding an A4 paper in font 
+
+& profile sides - We also have a conresponding pictures that are 
+
+annotated #ily \andmarleing- The annotations are to mark 
+
+the points off arm shoulder waistichest 8bicep . Both af these 
+datasets are m jRo png format 
+The over goal is te automate the landmark points on the 
+take of a Customer holdmg an A4 paper 
+Second goal is to automate how measurements needed loaded 
+on the automated \andmariciny done previously - 
+
+re 
+
+My original task is to play around with Dofectron2- thats the 
+
+recommended tool well use for our object detection- 
+
+This is the flow of using the Detectron First Vi need to 
+
+register the dataset go it can be used mM Defectront not is 
+
+to tramn the registered dataset usm a model built in Detectront 
+
+Then well evaluate the models purtormannge & lastly 1 
+
+Visualize our trained Gninia datasets Bae a she further by 
+
+using a newlys taken picture of someone holdny an AY paper 
+
+| see if the \anolmarding is the same as we expected . 
+
+8 registry our custom dataset there are two ways to do 
+haig For & normal datasetfke ! tie we currently have), lI need 
+totransform ir WHO a list of dictronanips 
+Tiese dictionavies will cottam information of each mage 
+The main keywords needed for registening dataset in 
+derectnonc are : 

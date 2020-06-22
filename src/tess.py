@@ -27,7 +27,7 @@ def tessract_test(img_path, filename):
     # dic = pytesseract.image_to_data(img_rgb, lang='eng', output_type='data.frame')
     dic = pytesseract.image_to_data(img_rgb, lang='eng', output_type='dict')
     print("Recognition with pyTesseract only")
-    print(pytesseract.image_to_string(img_rgb, lang='eng'))
+    print("PYtess string output = " +pytesseract.image_to_string(img_rgb, lang='eng'))
     left_list = dic['left']
     top_list = dic['top']
     width_list = dic['width']

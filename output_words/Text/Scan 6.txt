@@ -1,0 +1,43 @@
+
+
+
+
+research vuyecuve acmevements 
+
+
+6.1 
+
+
+In Pek@chon , that's another Story - Odlechron2 is an object 
+detection tool using most bonn alsorithm to detect objects 
+Wa photo . .. 
+when usmy one photo, one can upload it ball in a pretrained 
+model to detect objects foundi wi the SG photo You can 
+mnsariee this detection Th for of Keypoint, panoptic 
+segmentation joounding box , eye \ dop't semember the 
+
+
+last nod 
+
+
+DETETRONV 
+
+
+tip Ragistex custom dataset 
+indata itself 
+annotation in joohle . 
+oh your dataset is Tn COCO format , yor can 
+utilice Coco API and regisstes divectfy N0 need 
+40 transform data file who a list. 
+
+
+xii 
+
+
+@ call in a pretranned model 
+
+
+( visualiethe the detection 
+
+
+am I stupidor or Just plain acyl 
